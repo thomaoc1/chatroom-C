@@ -34,6 +34,7 @@ void *receiving_msg(void *client) {
     while(nbytes > 0) {
 
         nbytes = receive(clientfd, (void **)&buffer, &rawtime);
+        time(&rawtime);
         struct tm *local = localtime(&rawtime);
         sprintf(timestamp, "(%02d:%02d:%02d)", local->tm_hour, local->tm_min, local->tm_sec);
 
