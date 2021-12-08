@@ -1,16 +1,8 @@
-# chatroom-C
+# Chatroom C
 
-1. client sends package [message size (size_t), timestamp (time_t), message (char *)] to server
-2. server receives package and sends to all clients
-3. clients receive package and display it on screen
+## Table des matières
 
-First package sent before every message is the client username
-
-OR 
-
-Every message sent is sent with the prefix "username: message"
-
-
-1. Send function
-
-2. Receive function 
+1. Choix d'implementation: ( 2 threads pour clients (send/recv), rawtime )
+2. Limitations du projet: ( bug après copier coller 1500 chiffres avec espaces )
+3. Difficultées rencontrées: ( time.h, select à la place de pthrea, pseudo )
+4. Solutions originales: ( pseudo, test avec pipe python ) 
