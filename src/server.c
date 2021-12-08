@@ -124,7 +124,6 @@ int main(int argc, char *argv[]) {
 
                 // If client is in FD set, they are sending a message
                 if(FD_ISSET(clients[i], &readfds)){
-                    printf("ho\n");
                     // First thing a client sends is their pseudo                    
                     char *pseudo;
                     size_t nbytes = checked(receive(clients[i], (void **)&pseudo));
