@@ -39,7 +39,7 @@ void *receiving_msg(void *client) {
 
         if (nbytes > 0) {
             // Displays pseudo and message
-            printf("%s %s", buffer, timestamp);
+            printf("%s %s", timestamp, buffer);
             free(buffer);
         }
     }
