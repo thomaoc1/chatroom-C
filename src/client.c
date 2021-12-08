@@ -51,8 +51,8 @@ void *sending_msg(void *client) {
     char *pseudo = client_data.id;
 
     // Message buffer
-    char buffer[1024];
-    char message[2048];
+    char buffer[1024]; // Message read from stdin
+    char message[2048]; // Pseudo followed my message 
 
     while (fgets(buffer, 1024, stdin)) {
         sprintf(message, "%s: %s", pseudo, buffer);
