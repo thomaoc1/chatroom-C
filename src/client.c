@@ -22,8 +22,9 @@ void *receiving_msg(void *client) {
     struct clients client_data = *(struct clients *)client;
     int clientfd = client_data.socket;
 
-    // Time
+    // Time and timestamp
     time_t rawtime;
+    char timestamp[11];  
 
     // Message buffer
     char *buffer;
@@ -31,11 +32,14 @@ void *receiving_msg(void *client) {
 
     // If nbytes == 0 then socket has been disconnected
     while(nbytes > 0) {
+
         nbytes = receive(clientfd, (void **)&buffer, &rawtime);
+        struct tm *local = localtime(&rawtime);
+        sprintf(timestamp, "(%02d:%02d:%02d)", local->tm_hour, local->tm_min, local->tm_sec);
 
         if (nbytes > 0) {
             // Displays pseudo and message
-            printf("%s", buffer);
+            printf("%s %s", buffer, timestamp);
             free(buffer);
         }
     }
