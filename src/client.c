@@ -11,26 +11,25 @@
 
 #include "common.h"
 
-void *receiving_msg(void *socket) {
+struct clients {
+        char* id;
+        int socket;
+    } client;
+
+void *receiving_msg(void *client) {
     
-    // Convert socket back to int / 
-    int clientfd = *(int *)socket;
+    // Convert socket back to int
+    struct clients client_data = *(struct clients *)client;
+    int clientfd = client_data.socket;
+    char *pseudo = client_data.id;
 
     // Message buffer
     char *buffer;
     size_t nbytes = 1;
 
-    // Time
-    time_t now;
-
     // If nbytes == 0 then socket has been disconnected
     while(nbytes > 0) {
         nbytes = receive(clientfd, (void **)&buffer);
-
-        // Fetches system's local time and displays it before the message
-        time(&now);
-        struct tm *local = localtime(&now);
-        printf("(%02d:%02d:%02d) ", local->tm_hour, local->tm_min, local->tm_sec);
 
         if (nbytes > 0) {
             // Displays pseudo and message
@@ -42,15 +41,18 @@ void *receiving_msg(void *socket) {
     exit(0);
 }
 
-void *sending_msg(void *socket) {
+void *sending_msg(void *client) {
 
     // Convert socket back to int
-    int clientfd = *(int *)socket;
+    struct clients client_data = *(struct clients *)client;
+    int clientfd = client_data.socket;
+    char *pseudo = client_data.id;
 
     // Message buffer
     char buffer[1024];
 
     while (fgets(buffer, 1024, stdin)) {
+        ssend(clientfd, pseudo, strlen(pseudo) + 1);
         ssend(clientfd, buffer, strlen(buffer) + 1);
     }
 
@@ -84,17 +86,18 @@ int main(int argc, char *argv[]) {
 
     // Attempt connection to server
     checked(connect(clientfd, (struct sockaddr *)&server, sizeof(server)));
-
-    // Send pseudo
-    ssend(clientfd, pseudo, strlen(pseudo) + 1);
+    
+    struct clients client;
+    client.id = pseudo;
+    client.socket = clientfd;
 
     // Declaration and creation of threads in charge of sending/receiving messages
     pthread_t send_msg, recv_msg;
-    if (pthread_create(&send_msg, NULL, sending_msg, (void *)&clientfd) < 0) {
+    if (pthread_create(&send_msg, NULL, sending_msg, (void *)&client) < 0) {
         perror("Thread creation failed\n");
         exit(EXIT_FAILURE);
     }
-    if (pthread_create(&recv_msg, NULL, receiving_msg, (void *)&clientfd) < 0) {
+    if (pthread_create(&recv_msg, NULL, receiving_msg, (void *)&client) < 0) {
         perror("Thread creation failed\n");
         exit(EXIT_FAILURE);
     }
