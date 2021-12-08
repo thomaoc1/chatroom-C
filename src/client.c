@@ -22,13 +22,16 @@ void *receiving_msg(void *client) {
     struct clients client_data = *(struct clients *)client;
     int clientfd = client_data.socket;
 
+    // Time
+    time_t rawtime;
+
     // Message buffer
     char *buffer;
     size_t nbytes = 1;
 
     // If nbytes == 0 then socket has been disconnected
     while(nbytes > 0) {
-        nbytes = receive(clientfd, (void **)&buffer);
+        nbytes = receive(clientfd, (void **)&buffer, &rawtime);
 
         if (nbytes > 0) {
             // Displays pseudo and message
@@ -42,8 +45,9 @@ void *receiving_msg(void *client) {
 
 void *sending_msg(void *client) {
 
-    time_t now;
-    time(&now);
+    // Should be ok
+    time_t rawtime;
+    time(&rawtime);
 
     // Convert socket back to int
     struct clients client_data = *(struct clients *)client;
@@ -56,7 +60,7 @@ void *sending_msg(void *client) {
 
     while (fgets(buffer, 1024, stdin)) {
         sprintf(message, "%s: %s", pseudo, buffer);
-        ssend(clientfd, message, strlen(message) + 1);
+        ssend(clientfd, message, strlen(message) + 1, rawtime);
     }
 
     // Terminate thread once client is done sending messages

@@ -38,10 +38,10 @@ void sig_handler(int sig) {
 }
 
 
-void message_send_all(const char* message) {
+void message_send_all(const char* message, time_t rawtime) {
     // Iterate through clients 
     for (int i = 0; i < nclients; i++) {
-        ssend(clients[i], (void *)message, strlen(message) + 1);
+        ssend(clients[i], (void *)message, strlen(message) + 1, rawtime);
     }
 
 }
@@ -119,9 +119,10 @@ int main(int argc, char *argv[]) {
                 // If client is in FD set, they are sending a message
                 if(FD_ISSET(clients[i], &readfds)){                                 
                     char *buffer;
-                    size_t nbytes = checked(receive(clients[i], (void **)&buffer));
+                    time_t rawtime;
+                    size_t nbytes = checked(receive(clients[i], (void **)&buffer, &rawtime));
                     if(nbytes > 0) {
-                        message_send_all(buffer);
+                        message_send_all(buffer, rawtime);
                         free(buffer);
                     } else {
                         close(clients[i]);
