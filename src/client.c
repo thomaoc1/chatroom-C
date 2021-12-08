@@ -21,7 +21,6 @@ void *receiving_msg(void *client) {
     // Convert socket back to int
     struct clients client_data = *(struct clients *)client;
     int clientfd = client_data.socket;
-    char *pseudo = client_data.id;
 
     // Message buffer
     char *buffer;
@@ -43,6 +42,9 @@ void *receiving_msg(void *client) {
 
 void *sending_msg(void *client) {
 
+    time_t now;
+    time(&now);
+
     // Convert socket back to int
     struct clients client_data = *(struct clients *)client;
     int clientfd = client_data.socket;
@@ -50,10 +52,11 @@ void *sending_msg(void *client) {
 
     // Message buffer
     char buffer[1024];
+    char message[2048];
 
     while (fgets(buffer, 1024, stdin)) {
-        ssend(clientfd, pseudo, strlen(pseudo) + 1);
-        ssend(clientfd, buffer, strlen(buffer) + 1);
+        sprintf(message, "%s: %s", pseudo, buffer);
+        ssend(clientfd, message, strlen(message) + 1);
     }
 
     // Terminate thread once client is done sending messages

@@ -38,19 +38,13 @@ void sig_handler(int sig) {
 }
 
 
-void message_send_all(const char* message, const char* pseudo) {
-
-    char buffer[1024];
-    sprintf(buffer, "%s: %s", pseudo, message);
-
+void message_send_all(const char* message) {
     // Iterate through clients 
     for (int i = 0; i < nclients; i++) {
-        ssend(clients[i], buffer, strlen(buffer) + 1);
+        ssend(clients[i], (void *)message, strlen(message) + 1);
     }
 
 }
-
-
 
 int main(int argc, char *argv[]) {
 
@@ -123,19 +117,15 @@ int main(int argc, char *argv[]) {
             for(int i = 0; i < nclients; i++) {
 
                 // If client is in FD set, they are sending a message
-                if(FD_ISSET(clients[i], &readfds)){
-                    // First thing a client sends is their pseudo                    
-                    char *pseudo;
-                    size_t nbytes = checked(receive(clients[i], (void **)&pseudo));
-                    
+                if(FD_ISSET(clients[i], &readfds)){                                 
                     char *buffer;
-                    nbytes = checked(receive(clients[i], (void **)&buffer));
+                    size_t nbytes = checked(receive(clients[i], (void **)&buffer));
                     if(nbytes > 0) {
-                        message_send_all(buffer, pseudo);
+                        message_send_all(buffer);
                         free(buffer);
                     } else {
                         close(clients[i]);
-                        printf("Client '%s' has disconnected.\n", pseudo);
+                        printf("Client has disconnected.\n");
                         clients[i] = clients[nclients - 1];
                         nclients--;
                     }
