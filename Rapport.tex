@@ -11,24 +11,22 @@
 \usepackage{fullpage}
 \usepackage{fancyheadings}
 \usepackage[absolute]{textpos}
-\usepackage[francais]{babel}
+\usepackage[english]{babel}
 \usepackage[autolanguage]{numprint}
 
 \begin{document}
-
 \begin{titlepage}
 \begin{textblock*}{5cm}(9mm,9mm)
 \includegraphics[scale=0.5]{ULB.jpg}
 \end{textblock*}
-
 \author{CHRETIEN Marcus, O'CUILLEANAIN Thomas}
 \date{\today}
 \title{
     \begin{minipage}\linewidth
         \centering
-        Report
+        Project Report
         \vskip10pt
-        \large\textbf{Chatroom in C}
+        \large\textbf{Chatroom}
     \end{minipage}
 }
 \maketitle
@@ -43,5 +41,29 @@
 
 \tableofcontents
 \newpage
+
+\section{Introduction}
+
+The goal of the project.
+
+\section{Choices of implementation}
+
+2 threads in client, rawtime
+
+\section{Limitations of the project}
+
+Bug after copy-pasting 1500 numbers with spaces
+
+\section{Difficulties encountered}
+
+time.h, using select instead of threads to manage clients
+
+\section{Original solutions}
+
+Displaying pseudo
+
+\section{Recherches suplémentaires}
+
+test avec pipe et fichier python
 
 \end{document}
