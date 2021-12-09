@@ -25,8 +25,7 @@ struct clients {
 void *receiving_msg(void *client) {
     
     // Convert socket back to int
-    struct clients client_data = *(struct clients *)client;
-    int clientfd = client_data.socket;
+    int clientfd = *(int *)client;
 
     // Time and timestamp
     time_t rawtime;
@@ -56,7 +55,7 @@ void *receiving_msg(void *client) {
 
 void *sending_msg(void *client) {
 
-    // Convert socket back to int
+    // Retrieving client data
     struct clients client_data = *(struct clients *)client;
     int clientfd = client_data.socket;
     char *pseudo = client_data.id;
@@ -115,7 +114,7 @@ int main(int argc, char *argv[]) {
         perror("Thread creation failed\n");
         exit(EXIT_FAILURE);
     }
-    if (pthread_create(&recv_msg, NULL, receiving_msg, (void *)&client) < 0) {
+    if (pthread_create(&recv_msg, NULL, receiving_msg, (void *)&client.socket) < 0) {
         perror("Thread creation failed\n");
         exit(EXIT_FAILURE);
     }
