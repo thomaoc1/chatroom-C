@@ -56,9 +56,10 @@ The goal of this project is to create a basic chatroom capable of sending timest
 Once we initialised the connection between the client and the server, we decided to manange the exchange of messages by creating two threads client side, one to manage all reception of messages and the other to manage all sending of messages. \par
 This is because the the system calls $read$ and $write$ are blocking calls. This means that without using a thread, a user would be unable to send a message as he is being blocked by $read$ which is waiting for an incoming message.
 
-\subsubsection{Passing more than one argument to a thread}
-When sending a message, the function in charge of doing so required the client's $pseudo$ and $socket$, however, when creating a thread using $pthread$\_$create$ you are limited to one argument for the function assigned to the thread.\par
-Therefore we implemented a $struct$ that holds all the data required, which was then passed as the argument in said function.
+\subsubsection{Passing data to a thread}
+When sending a message, the function in charge of doing so requires the client's $pseudo$ and $socket$, however, when creating a thread using $pthread$\_$create$ you are limited to one argument for the function assigned to the thread.\par
+Therefore we implemented a $struct$ that holds all the data required, which was then passed as the argument in said function.\par
+For the function in charge of receiving messages, only the client socket was required.
 
 \subsection{rawtime}
 
@@ -78,9 +79,10 @@ Therefore we implemented a $struct$ that holds all the data required, which was 
 
 \subsection{Displaying pseudo}
 
-\section{Additional reasearch and testing}
+\section{Additional reasearch}
 
 \subsection{Findings when testing limitations}
+\subsection{Able to send messages over the internet}
 
 
 
