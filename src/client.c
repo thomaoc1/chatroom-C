@@ -1,3 +1,9 @@
+/*
+Program : Client for Chatroom
+Authors : CHRETIEN Marcus, O'CUILLEANAIN Thomas
+Registration numbers: , 521605
+*/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <pthread.h>
