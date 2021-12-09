@@ -1,4 +1,4 @@
-FLAGS = -Wall -Wextra -Wpedantic
+FLAGS = -Wall 
 all: client server
 
 client: client.c common.h
