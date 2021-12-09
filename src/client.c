@@ -17,10 +17,10 @@ Registration numbers: , 521605
 
 #include "common.h"
 
-struct clients {
+typedef struct {
         char* id;
         int socket;
-    } client;
+    } clients;
 
 void *receiving_msg(void *client) {
     
@@ -56,7 +56,7 @@ void *receiving_msg(void *client) {
 void *sending_msg(void *client) {
 
     // Retrieving client data
-    struct clients client_data = *(struct clients *)client;
+    clients client_data = *(clients *)client;
     int clientfd = client_data.socket;
     char *pseudo = client_data.id;
 
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     // Attempt connection to server
     checked(connect(clientfd, (struct sockaddr *)&server, sizeof(server)));
     
-    struct clients client;
+    clients client;
     client.id = pseudo;
     client.socket = clientfd;
 
