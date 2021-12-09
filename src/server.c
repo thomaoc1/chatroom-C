@@ -1,3 +1,9 @@
+/*
+Program : Server for Chatroom
+Authors : CHRETIEN Marcus, O'CUILLEANAIN Thomas
+Registration numbers: , 521605
+*/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/select.h>
@@ -115,7 +121,6 @@ int main(int argc, char *argv[]) {
         } else {
             // Otherwise it's a client sending a message
             for(int i = 0; i < nclients; i++) {
-
                 // If client is in FD set, they are sending a message
                 if(FD_ISSET(clients[i], &readfds)){                                 
                     char *buffer;
@@ -132,10 +137,7 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }
-
         }        
-
-
     }
     
     return 0;

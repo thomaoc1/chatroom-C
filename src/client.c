@@ -50,14 +50,14 @@ void *receiving_msg(void *client) {
 
 void *sending_msg(void *client) {
 
-    // Should be ok
-    time_t rawtime;
-    time(&rawtime);
-
     // Convert socket back to int
     struct clients client_data = *(struct clients *)client;
     int clientfd = client_data.socket;
     char *pseudo = client_data.id;
+
+    // Time of system
+    time_t rawtime;
+    time(&rawtime);    
 
     // Message buffer
     char buffer[1024]; // Message read from stdin
