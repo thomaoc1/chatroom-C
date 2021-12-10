@@ -24,6 +24,11 @@ int clients[1024];
 int serverfd = 0;
 static int nclients = 0;
 
+/**
+ * Catches the interrupt signal and closes all sockets
+ * 
+ * sig : Interruption signal
+ */
 void sig_handler(int sig) {
 
     // Using '\r' to hide '^C' when used 
@@ -43,7 +48,12 @@ void sig_handler(int sig) {
     exit(0);
 }
 
-
+/**
+ * Sends message given to all currently connected clients
+ * 
+ * message : Message to be sent to all clients
+ * rawtime : Time for timestamp
+ */
 void message_send_all(const char* message, time_t rawtime) {
     // Iterate through clients 
     for (int i = 0; i < nclients; i++) {
@@ -103,14 +113,12 @@ int main(int argc, char *argv[]) {
         for(int i = 0; i < nclients; i++) {
             FD_SET(clients[i], &readfds);
 
-            // ????
             if (clients[i] > maxfd) {
                 maxfd = clients[i];
             }
         }
 
-        // Select waits for a socket to be ready, once a socket has been found, all other sockets in the set
-        // are removed, leaving the one that is ready
+        // Listening for requests
         select(maxfd + 1, &readfds, NULL, NULL, NULL);
 
         if (FD_ISSET(serverfd, &readfds)) {
@@ -125,13 +133,19 @@ int main(int argc, char *argv[]) {
                 if(FD_ISSET(clients[i], &readfds)){                                 
                     char *buffer;
                     time_t rawtime;
+
+                    // Extracting package
                     size_t nbytes = checked(receive(clients[i], (void **)&buffer, &rawtime));
                     if(nbytes > 0) {
+                        // If something was sent
                         message_send_all(buffer, rawtime);
                         free(buffer);
                     } else {
+                        // If nothing was sent
                         close(clients[i]);
                         printf("Client has disconnected.\n");
+
+                        // To fill gaps in array
                         clients[i] = clients[nclients - 1];
                         nclients--;
                     }

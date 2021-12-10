@@ -22,6 +22,11 @@ typedef struct {
         int socket;
     } clients;
 
+/**
+ * Handles the reception of messages
+ * 
+ * client : Pointer to a clients struct
+ */
 void *receiving_msg(void *client) {
     
     // Convert socket back to int
@@ -52,6 +57,11 @@ void *receiving_msg(void *client) {
     exit(0);
 }
 
+/**
+ * Handles sending messages to the server
+ *
+ * client : pointer to a clients struct
+ */
 void *sending_msg(void *client) {
 
     // Retrieving client data
