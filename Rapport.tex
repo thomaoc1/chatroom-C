@@ -12,9 +12,7 @@
 \usepackage{fancyheadings}
 \usepackage[absolute]{textpos}
 \usepackage[english]{babel}
-\usepackage[autolanguage]{numprint}
-\usepackage{amsmath}
-\usepackage{algorithm,algorithmic,amsmath}
+
 
 \begin{document}
 \begin{titlepage}
@@ -40,7 +38,6 @@
 \end{figure}
 \end{titlepage}
 
-
 \tableofcontents
 \newpage
 
@@ -52,38 +49,63 @@ The goal of this project is to create a basic chatroom capable of sending timest
 
 \subsection{Client}
 
-\subsubsection{Sending and recieving messages}
+\subsubsection{Sending and receiving messages}
 Once we initialised the connection between the client and the server, we decided to manange the exchange of messages by creating two threads client side, one to manage all reception of messages and the other to manage all sending of messages. \par
 This is because the the system calls $read$ and $write$ are blocking calls. This means that without using a thread, a user would be unable to send a message as he is being blocked by $read$ which is waiting for an incoming message.
 
 \subsubsection{Passing data to a thread}
-When sending a message, the function in charge of doing so requires the client's $pseudo$ and $socket$, however, when creating a thread using $pthread$\_$create$ you are limited to one argument for the function assigned to the thread.\par
-Therefore we implemented a $struct$ that holds all the data required, which was then passed as the argument in said function.\par
-For the function in charge of receiving messages, only the client socket was required.
+To be able to pass all the data required to the two threads responsible for receiving and sending messages we decided to define a $clients$ $struct$ type which holds all the data needed by the features' respective functions. This allowed us to avoid using global variables.
 
-\subsection{rawtime}
+\subsubsection{Timestamp}
+For fetching the time to create the timestamp associated to a message, we decided to go with one of many options. We thought it would make more sense to fetch the receiver's local system time upon receiving a message, instead of sending the sender's local system time. \par
+This is because it would avoid a situation where the sender and receiver don't have the same local time and thus the timestamps would be confusing. \par
+However, we decided to fetch the sender's local time and send it as part of the message package.
+
+\subsection{Server}
+
+\subsubsection{Storing client sockets}
+Due to $select$ being destructive to the file descriptor set that it is monitoring, we decided to create an array which holds all the sockets currently linked to the server. Once select detects a request for a connection / disconnection, the array is updated. This allowed us the reinitialise the modified set at the beginning of each iteration of the while loop.
+
+\subsubsection{Signal handler}
+When receiving a keyboard interrupt the server notifies through the stdout that it is closing all client. Next, it proceeds to close all client sockets and displays one by one which client socket it is closing before finally closing the server socket and exiting the program with success.
 
 \section{Limitations of the project}
 
-\subsection{Bug after copy-pasting 1500 numbers with spaces}
+\subsection{Messages limited to 1023 characters}
+When testing the limitations of sending messages, we used a python script to flush the stdin of the client with 4000 characters by piping it's output. \par 
+When doing this, the program holds, however, since our message buffer only accepts 1024 bits, when the $fgets$ function receives 1023 characters / bits it adds a $null$ $terminating$ $character$, saves it to the buffer and sends it as a message. \par
+Interestingly enough, it continues to send the message in chunks of maximum 1023 characters. \par
+This leads to the reception of a block of continuous text seperated by timestamps and the sender's pseudonym prefixing each block. \par
+We expect this is due to the functionality of the $fgets$ function.
 
-\subsection{Receiving a message whilst in the process of sending one}
+
+\subsection{Receiving and sending messages simultaneously}
+When typing the message you would like to send into the terminal, if you receive a message before having sent yours, your incomplete message will be muddled with the message you received from the server.
 
 \section{Difficulties encountered}
 
-\subsection{using select instead of threads to manage clients}
+\subsection{The time.h library}
 
-\subsection{time.h}
+Neither of us had ever encountered the time.h library
+
+\subsection{Formatting strings}
+
+\newpage
 
 \section{Original solutions}
 
 \subsection{Displaying pseudo}
+When the user runs the client script, he passes his pseudonym as an argument, which is then saved int a varible. To display the user's pseudo we added it as a prefix of every message they send, instead of sending it as part of the message package. 
+
+\subsubsection{Advantage}
+The advantage of proceding this way is that it is simpler to manage. The server does not keep track of which client is who thus is only in charge of passing the already signed message along to the connected clients.
+\subsubsection{Disadvantage}
+The disadvantage of this solution is that since the server does not keep track of it's clients respective pseudonyms, when a user disconnects the server cannot communicate who disconnected to the remaining clients.
 
 \section{Additional reasearch}
 
-\subsection{Findings when testing limitations}
-\subsection{Able to send messages over the internet}
-
+\subsection{Port mapping}
+To test our project even further we decided to port map our routers to eachother and one of us launched a server. To our surprise, we were both able to connect to the server and send messages to eachother using the chatroom
 
 
 \end{document}
