@@ -69,6 +69,11 @@ Due to $select$ being destructive to the file descriptor set that it is monitori
 \subsubsection{Signal handler}
 When receiving a keyboard interrupt the server notifies through the stdout that it is closing all client. Next, it proceeds to close all client sockets and displays one by one which client socket it is closing before finally closing the server socket and exiting the program with success.
 
+\subsection{Common.h}
+
+We decided to use the common.h file given to us during the TPs 8 and 9. This allowed effecient error code checking when using socket related system calls.\par
+
+We modified the $ssend$ and $receive$ functions so that they also take a pointer to $time$\_$t$ variable. 
 \section{Limitations of the project}
 
 \subsection{Messages limited to 1023 characters}
@@ -105,7 +110,7 @@ The disadvantage of this solution is that since the server does not keep track o
 \section{Additional reasearch}
 
 \subsection{Port mapping}
-To test our project even further we decided to port map our routers to eachother and one of us launched a server. To our surprise, we were both able to connect to the server and send messages to eachother using the chatroom
+To test our project even further we decided to port map our routers to eachother and one of us launched a server. To our surprise, we were both able to connect to the server using our clients and send messages to eachother.
 
 
 \end{document}
