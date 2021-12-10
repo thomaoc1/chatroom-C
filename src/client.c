@@ -39,7 +39,6 @@ void *receiving_msg(void *client) {
     while(nbytes > 0) {
 
         nbytes = receive(clientfd, (void **)&buffer, &rawtime);
-        time(&rawtime);
         struct tm *local = localtime(&rawtime);
         sprintf(timestamp, "(%02d:%02d:%02d)", local->tm_hour, local->tm_min, local->tm_sec);
 
@@ -61,8 +60,7 @@ void *sending_msg(void *client) {
     char *pseudo = client_data.id;
 
     // Time of system
-    time_t rawtime;
-    time(&rawtime);    
+    time_t rawtime;    
 
     // Message buffer
     char buffer[1024]; // Message read from stdin
@@ -70,6 +68,7 @@ void *sending_msg(void *client) {
 
     while (fgets(buffer, 1024, stdin)) {
         sprintf(message, "%s: %s", pseudo, buffer);
+        time(&rawtime); 
         ssend(clientfd, message, strlen(message) + 1, rawtime);
     }
 
