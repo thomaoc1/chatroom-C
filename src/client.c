@@ -54,7 +54,7 @@ void *receiving_msg(void *client) {
         }
     }
     printf("Lost connection to server\n");
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 /**
@@ -74,7 +74,7 @@ void *sending_msg(void *client) {
 
     // Message buffer
     char buffer[1024]; // Message read from stdin
-    char message[2048]; // Pseudo followed my message 
+    char message[1040]; // Pseudo followed my message 
 
     while (fgets(buffer, 1024, stdin)) {
         sprintf(message, "%s: %s", pseudo, buffer);
@@ -91,7 +91,13 @@ int main(int argc, char *argv[]) {
     // Checking correct usage
     if(argc != 4) {
         printf("Usage: ./client <pseudo> <ip_server> <port>\n");
-        exit(0);
+        exit(EXIT_SUCCESS);
+    }
+
+    // Checking pseudo length
+    if(strlen(argv[1]) > 15) {
+        printf("Pseudo has a maximum length of 15 characters");
+        exit(EXIT_SUCCESS);
     }
 
     // Parsing arguments

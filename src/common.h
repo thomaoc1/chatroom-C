@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 int _checked(int ret, const char *calling_function) {
-	// If the function returns less that 0
+	// If the function returns an error
     if (ret < 0) {
         perror(calling_function);
         exit(EXIT_FAILURE);
