@@ -71,14 +71,6 @@ Due to $select$ being destructive to the file descriptor set that it is monitori
 \subsubsection{Signal handler}
 When receiving a keyboard interrupt the server notifies through the stdout that it is closing all client. Next, it proceeds to close all client sockets and displays one by one which client socket it is closing before finally closing the server socket and exiting the program with success.
 
-\subsection{Error handling}
-
-\subsubsection{Incorrect usage}
-When running the client or server executables, if the user does not input the required arguments, they are met with a message specifying to do so.
-
-\subsubsection{Avoiding buffer overflow}
-The client is limited to a 15 character pseudonym. To avoid overflowing the message buffer, when specifying their pseudonym, if the user attempts to create a pseduo larger than 15 characters, they are met with an error message telling them to reduce it's length.
-
 \subsection{Common.h}
 
 We decided to use the common.h file given to us during the TPs 8 and 9. This allowed efficient error code checking when using socket related system calls.\par
@@ -101,15 +93,13 @@ When typing the message you would like to send into the terminal, if you receive
 
 \subsection{The time.h library}
 
-The time.h library was totally new to us. We had to figure out how "raw"time, localtime and time formatting work, which was confusing at first. Our first implementation was to keep it simple. We create the time stamp the moment the client received a message and just print it with the received message. That way we wouldn't have to add a parameter to our sending and receiving system.
-However, after thinking about it and rereading the assignment, we decided to add the "rawtime" to the system parameters and once the client receives a message, to format the raw time into a (hh:mm:ss) format.
-That would firstly give as a more true time to the sending time and take us closer to the assignment requirements.
+The time.h library was totally new to us. We had to figure out how "raw-time", localtime and time formatting work, which was confusing at first. Our first implementation was to keep it simple. We created the timestamp the moment the client received a message and prefixed it to the received message. That way we wouldn't have to add a parameter to our sending and receiving system.
+However, after much reconsideration, and realisation that the time was meant to be part of the sent package, we decided to add it to the system's parameters. This meant that the time had to be formatted upon receival. The format we chose was $(hh:mm:ss)$.
+This was more in line with the assignement requirements.
 
 \subsection{Message structure}
-We went back and forth on how to structure our message structure. As mentioned above, we first, simply timestamped our message at the receiving stage in the client. Which as we figured was not the right approach. So we changed it in such a manner to send the raw time alongside the message and formatting it at the receiving end to display it properly.
+We went back and forth on how to design our message structure. As mentioned above, we first, simply timestamped our message at the receiving stage in the client. Which as we figured was not the right approach. So we changed it in such a manner to send the raw time alongside the message and formatting it at the receiving end to display it properly.
 For the pseudonym we went a simple way though. Every time a client sends a message the his pseudo is added as prefix to the message and is thus treated as part of the message.
-
-\newpage
 
 \subsection{Using Select}
 As we started this project, we quickly patched something based on the TP we had made. Our knowledge about Select wasn't great. This lead us to implement the server system in such a way to created a thread for every new client. Although it was functional, we went of tracks. Our assignment clearly stated to use select instead of multiple threads. So after acquiring the knowledge, we implemented Select to handle all the clients.  
