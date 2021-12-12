@@ -71,6 +71,14 @@ Due to $select$ being destructive to the file descriptor set that it is monitori
 \subsubsection{Signal handler}
 When receiving a keyboard interrupt the server notifies through the stdout that it is closing all client. Next, it proceeds to close all client sockets and displays one by one which client socket it is closing before finally closing the server socket and exiting the program with success.
 
+\subsection{Error handling}
+
+\subsubsection{Incorrect usage}
+When running the client or server executables, if the user does not input the required arguments, they are met with a message specifying to do so.
+
+\subsubsection{Avoiding buffer overflow}
+The client is limited to a 15 character pseudonym. To avoid overflowing the message buffer, when specifying their pseudonym, if the user attempts to create a pseduo larger than 15 characters, they are met with an error message telling them to reduce it's length.
+
 \subsection{Common.h}
 
 We decided to use the common.h file given to us during the TPs 8 and 9. This allowed efficient error code checking when using socket related system calls.\par
