@@ -1,1 +1,1 @@
-# Simple Chatroom C
+# Simple Chatroom in C
