@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "in.h": "c",
-        "signal.h": "c",
-        "select.h": "c"
-    }
-}
